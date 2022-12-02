@@ -136,6 +136,7 @@ export default function MapLayout() {
     );
   }
 
+  // The actual rendered component
   return (
     <Box>
       <Box className={classes.root}>
@@ -162,7 +163,7 @@ export default function MapLayout() {
             label="Current Longitude of Map"
             // bcz sometimes 0 can get coerced to falsy
             // that's why i used toString at the end
-            value={`${mapDetails?.center.lng.toString() || ''}`}
+            value={`${mapDetails?.center.lon.toString() || ''}`}
           />
           <TextField
             variant="standard"

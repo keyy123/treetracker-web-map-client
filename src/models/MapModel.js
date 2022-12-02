@@ -67,7 +67,7 @@ class MapModel {
         this._markers.length === 0 ||
         // all markers out of bounds
         this._markers.every(
-          (marker) => !this._map.getBounds().contains(marker.getLatLng()),
+          (marker) => !this._map.getBounds().contains(marker.getLatlon()),
         )
       ) {
         found = false;
@@ -93,7 +93,7 @@ class MapModel {
         for (let x1 = 0; x1 < x; x1 += 10) {
           count += 1;
           const tileChar = utfGridLayer._objectForEvent({
-            latlng: mymap.containerPointToLatLng([x1, y1]),
+            latlon: mymap.containerPointToLatlon([x1, y1]),
           })._tileCharCode;
           if (!tileChar) {
             countNoChar += 1;
@@ -125,38 +125,38 @@ class MapModel {
         // find it
         // get nearest markers
         expect(nearest.lat).number();
-        expect(nearest.lng).number();
+        expect(nearest.lon).number();
         if (
           !this._map.getBounds().contains({
             lat: nearest.lat,
-            lng: nearest.lng,
+            lon: nearest.lon,
           })
         ) {
           log.log('out of bounds, display arrow');
           const dist = {
             lat: nearest.lat,
-            lng: nearest.lng,
+            lon: nearest.lon,
           };
           const distanceLat = window.L.CRS.EPSG3857.distance(
             center,
-            window.L.latLng(dist.lat, center.lng),
+            window.L.latlon(dist.lat, center.lon),
           );
           log.log('distanceLat:', distanceLat);
           expect(distanceLat).number();
-          const distanceLng = window.L.CRS.EPSG3857.distance(
+          const distancelon = window.L.CRS.EPSG3857.distance(
             center,
-            window.L.latLng(center.lat, dist.lng),
+            window.L.latlon(center.lat, dist.lon),
           );
-          log.log('distanceLng:', distanceLng);
-          expect(distanceLng).number();
+          log.log('distancelon:', distancelon);
+          expect(distancelon).number();
           log.log('dist:', dist);
           log.log('center:', center, center.lat);
           if (dist.lat > center.lat) {
             log.log('On the north');
-            if (distanceLat > distanceLng) {
+            if (distanceLat > distancelon) {
               log.log('On the north');
               this.showArrow('north');
-            } else if (dist.lng > center.lng) {
+            } else if (dist.lon > center.lon) {
               log.log('On the east');
               this.showArrow('east');
             } else {
@@ -165,10 +165,10 @@ class MapModel {
             }
           } else {
             log.log('On the south');
-            if (distanceLat > distanceLng) {
+            if (distanceLat > distancelon) {
               log.log('On the south');
               this.showArrow('south');
-            } else if (dist.lng > center.lng) {
+            } else if (dist.lon > center.lon) {
               log.log('On the east');
               this.showArrow('east');
             } else {
@@ -235,7 +235,7 @@ class MapModel {
     log.log('current center:', center);
     const zoom_level = this._map.getZoom();
     const res = await axios.get(
-      `${this.apiUrl}nearest?zoom_level=${zoom_level}&lat=${center.lat}&lng=${center.lng}`,
+      `${this.apiUrl}nearest?zoom_level=${zoom_level}&lat=${center.lat}&lon=${center.lon}`,
       {
         cancelToken: new axios.CancelToken((c) => {
           this._cancelAxios = c;
@@ -250,7 +250,7 @@ class MapModel {
     nearest = nearest
       ? {
           lat: nearest.coordinates[1],
-          lng: nearest.coordinates[0],
+          lon: nearest.coordinates[0],
         }
       : undefined;
     log.log('get nearest:', nearest);

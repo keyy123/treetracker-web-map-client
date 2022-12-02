@@ -23,7 +23,7 @@ describe('MapModel', () => {
               .mockReturnValueOnce(0),
           },
         },
-        LatLng: jest.fn(),
+        Latlon: jest.fn(),
       },
     };
   });
@@ -51,8 +51,8 @@ describe('MapModel', () => {
     mapModel.map = {
       getCenter: () => ({
         lat: () => 0,
-        lng: () => 0,
-        toJSON: () => ({ lat: 0, lng: 0 }),
+        lon: () => 0,
+        toJSON: () => ({ lat: 0, lon: 0 }),
       }),
       getBounds: () => ({
         contains: () => false,
@@ -61,7 +61,7 @@ describe('MapModel', () => {
     };
     await mapModel.checkArrow();
     expect(axios.get).toHaveBeenCalledWith(
-      expect.stringMatching(/\/api\/web\/nearest\?zoom_level=15&lat=0&lng=0/),
+      expect.stringMatching(/\/api\/web\/nearest\?zoom_level=15&lat=0&lon=0/),
       expect.anything(),
     );
     expect(mapModel.showArrow).toHaveBeenCalledWith('north');
@@ -105,8 +105,8 @@ describe('MapModel', () => {
       mapModel.map = {
         getCenter: () => ({
           lat: () => 0,
-          lng: () => 0,
-          toJSON: () => ({ lat: 0, lng: 0 }),
+          lon: () => 0,
+          toJSON: () => ({ lat: 0, lon: 0 }),
         }),
         getBounds: () => ({
           contains: () => false,
@@ -121,7 +121,7 @@ describe('MapModel', () => {
         });
       }, 10);
       //      expect(axios.get).toHaveBeenCalledWith(
-      //        expect.stringMatching(/\/api\/web\/nearest\?zoom_level=15&lat=0&lng=0/)
+      //        expect.stringMatching(/\/api\/web\/nearest\?zoom_level=15&lat=0&lon=0/)
       //      );
       //      expect(mapModel.showArrow).toHaveBeenCalledWith("north");
     });
